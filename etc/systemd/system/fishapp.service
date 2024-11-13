@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve fishapp
+After=network.target
+
+[Service]
+User=p3
+Group=www-data
+WorkingDirectory=/home/p3/code/fish-flask-app
+Environment="PATH=/home/p3/miniconda3/envs/fish-app/bin"
+ExecStart=/home/p3/miniconda3/envs/fish-app/bin/gunicorn --workers 3 --bind unix:fishapp.sock -m 007 wsgi:app
+
+[Install]
+WantedBy=multi-user.target

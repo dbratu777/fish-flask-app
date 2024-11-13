@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name <domain> www.<domain>;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/p3/code/fish-flask-app/fishapp.sock;
+    }
+}
