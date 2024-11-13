@@ -1,0 +1,98 @@
+
+.header-banner {
+    display: flex;
+    align-items: center;        /* Vertically align items */
+    flex-direction: row;        /* Align items in a row */
+    gap: 20px;                  /* Add some space between the device info and the actions (you can adjust this as needed) */
+}
+
+/* Container for device ID and Alias */
+.header-device-info {
+    display: flex;
+    flex-direction: column;     /* Stack device ID and Alias vertically */
+    align-items: flex-start;    /* Align the items to the left (default behavior) */
+    gap: 0;                      /* No gap between the device info paragraphs */
+}
+
+.header-device-info p {
+    margin: 0;  /* Remove any margin between the paragraphs */
+}
+
+/* Container for buttons and actions (Options, Reminders, Logout) */
+.header-actions {
+    display: flex;              /* Arrange the buttons in a row */
+    flex-direction: row;        /* Ensure buttons are in a row */
+    gap: 10px;                  /* Add space between buttons */
+    align-items: center;        /* Vertically center the buttons */
+}
+
+.header-dd {
+    position: relative;
+    display: inline-block;
+}
+
+.header-dd-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.header-dd:hover .header-dd-content {
+    display: block;
+}
+
+.header-dd-content p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.header-dd-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.header-dd-btn:hover {
+    background-color: #437ed1;
+}
+
+.alias-btn, .filter-btn, .water-btn, .feeder-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 5px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.alias-btn:hover, .filter-btn:hover, .water-btn:hover, .feeder-btn:hover {
+    background-color: #437ed1;
+}
+
+.logout-btn {
+    background-color: #9c2525;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background-color: #c3353f;
+}

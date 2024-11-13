@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main-container">
+        <!-- Media Section -->
+        {% include "media.html" %}
+
+        <!-- Vitals Section -->
+        {% include "vitals.html" %}
+    </div>
+    <div class="side-container">
+        <!-- Alerts Section -->
+        {% include "alerts.html" %}
+    </div>
+{% endblock %}

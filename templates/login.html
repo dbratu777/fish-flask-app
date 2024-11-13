@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish App - Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Fish App Login</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label for="device-id">Device ID:</label>
+                <input type="text" id="device-id" name="device-id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Device Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

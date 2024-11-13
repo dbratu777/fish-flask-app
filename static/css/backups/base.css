@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+}
+
+.main-container {
+    flex: 0 0 75%; /* 75% width */
+    padding: 20px;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+.side-container {
+    flex: 0 0 25%; /* 25% width */
+    padding: 20px;
+    background-color: #f4f4f9;
+    box-sizing: border-box;
+    overflow-y: auto; /* Scroll if content overflows */
+}

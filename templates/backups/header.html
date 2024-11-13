@@ -1,0 +1,107 @@
+
+<div class="header-banner">
+    <div class="header-device-info">
+        <p> Fish Friend <br> Web Application </p>
+    </div>
+
+    <div class="header-device-info">
+        <p id="device-id"> Device ID: {{ current_device.device_id if current_device.device_id else 'N/A'}} </p>
+        <p id="device-alias"> Device Alias: {{ current_device.alias if current_device.alias else 'N/A'}} </p>
+    </div>
+
+    <div class="header-actions">
+        <form id="update-device-alias-form" action="/set_alias" method="POST">
+            <div class="header-dd">
+                <button class="header-dd-btn" type="button">Options</button>
+                <div class="header-dd-content">
+                    <p> Modify Device Alias: </p>
+                    <input type="text" id="device-alias-value" name="device-alias-value"
+                            value="{{ current_device.alias if current_device.alias else '' }}" required>
+                    <button class="alias-btn" id="alias-btn" type="submit">Update</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="header-dd">
+            <button class="header-dd-btn">Reminders</button>
+            <div class="header-dd-content">
+                <p id="filter-ts">Last Filter Change: {{ latest_main.filter_time if latest_main.filter_time else 'N/A'}}</p>
+                <button class="filter-btn" id="filter-btn">Update</button>
+
+                <p id="water-ts">Last Water Swap: {{ latest_main.water_time if latest_main.water_time else 'N/A'}}</p>
+                <button class="water-btn" id="water-btn">Update</button>
+
+                <p id="feeder-ts">Last Fed: {{ latest_feed.timestamp if latest_feed.timestamp else 'N/A'}}</p>
+                <button class="feeder-btn" id="feeder-btn">Feed</button>
+            </div>
+        </div>
+
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button class="logout-btn" type="submit">Logout</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#update-device-alias-form').submit(function(event) {
+            event.preventDefault();
+            var aliasValue = $('#device-alias-value').val();
+            $.ajax({
+                url: '/set_alias',
+                method: 'POST',
+                data: {
+                    'device-alias-value': aliasValue
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#device-alias').text('Device Alias: ' + response.alias);
+                    }
+                },
+                error: function() {
+                    alert('Error updating alias.');
+                }
+            });
+        });
+    });
+
+    $('#filter-btn').click(function() {
+        $.ajax({
+            url: '/set_filter',
+            type: 'POST',
+            success: function(response) {
+                $('#filter-ts').text('Last Filter Change: ' + response.filter_ts);
+                $('#water-ts').text('Last Water Swap: ' + response.water_ts);
+            },
+            error: function(xhr, status, error) {
+                alert("There was an error updating the filter change time.");
+            }
+        });
+    });
+    $('#water-btn').click(function() {
+        $.ajax({
+            url: '/set_water',
+            type: 'POST',
+            success: function(response) {
+                $('#filter-ts').text('Last Filter Change: ' + response.filter_ts);
+                $('#water-ts').text('Last Water Swap: ' + response.water_ts);
+            },
+            error: function(xhr, status, error) {
+                alert("There was an error updating the water swap time.");
+            }
+        });
+    });
+    $('#feeder-btn').click(function() {
+        $.ajax({
+            url: '/set_feeder',
+            type: 'POST',
+            success: function(response) {
+                $('#feeder-ts').text('Last Fed: ' + response.timestamp);
+            },
+            error: function(xhr, status, error) {
+                alert("There was an error processing the feed request.");
+            }
+        });
+    });
+</script>

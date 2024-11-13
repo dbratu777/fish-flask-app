@@ -1,0 +1,112 @@
+<div>
+    <h3>Alerts</h3>
+    <div class="alert-sort-options">
+        <label>
+            <input type="radio" name="alert-sort" value="timestamp" class="sort-option" checked> Sort by Timestamp
+        </label>
+        <label>
+            <input type="radio" name="alert-sort" value="type_timestamp" class="sort-option"> Sort by Type
+        </label>
+    </div>
+    
+    <ul class="alert-list">
+        {% for alert in alerts %}
+            <li class="alert-item" id="alert-{{ alert.id }}" class="{{ 'unread' if not alert.read else '' }}">
+                <div class="alert-title">{{ alert.title }}</div>
+                <div class="alert-description">{{ alert.description }}</div>
+                <div class="alert-timestamp">{{ alert.timestamp }}</div>
+                <div class="alert-actions">
+                    {% if not alert.read %}
+                        <form class="mark-read-form" data-alert-id="{{ alert.id }}" method="POST" action="{{ url_for('set_alert_read', alert_id=alert.id) }}">
+                            <button type="submit" class="alert-mark-read-btn">Mark as Read</button>
+                        </form>
+                    {% endif %}
+                    <button class="alert-delete-btn" data-alert-id="${alert.id}">Delete</button>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function fetchLatestAlerts(sortOption) {
+        $.ajax({
+            type: 'GET',
+            url: '/get_alerts',
+            data: { sort: sortOption },
+            success: function(response) {
+                $('.alert-list').empty();
+                response.forEach(function(alert) {
+                    var alertClass = alert.read ? '' : 'unread';
+                    var alertHtml = `
+                        <li id="alert-${alert.id}" class="alert-item ${alertClass}">
+                            <div class="alert-title">${alert.title}</div>
+                            <div class="alert-description">${alert.description}</div>
+                            <div class="alert-timestamp">${alert.timestamp}</div>
+                            <div class="alert-actions">
+                                ${alert.read ? '' : '<form class="mark-read-form" data-alert-id="' + alert.id + '" method="POST" action="/set_alert_read/' + alert.id + '"><button type="submit" class="alert-mark-read-btn">Mark as Read</button></form>'}
+                                <button class="alert-delete-btn" data-alert-id="${alert.id}">Delete</button>
+                            </div>
+                        </li>
+                    `;
+                    $('.alert-list').append(alertHtml);
+                });
+
+                $('.alert-delete-btn').click(function() {
+                    var alertId = $(this).data('alert-id');
+                    deleteAlert(alertId);
+                });
+            },
+            error: function() {
+                console.error('Error fetching alerts.');
+            }
+        });
+        }
+
+        function deleteAlert(alertId) {
+            $.ajax({
+                type: 'POST',
+                url: '/delete_alert/' + alertId,
+                success: function(response) {
+                    $('#alert-' + alertId).remove();
+                    console.log('Alert deleted successfully');
+                },
+                error: function() {
+                    console.error('Error deleting alert.');
+                }
+            });
+        }
+
+        fetchLatestAlerts('timestamp');
+        $('.alert-sort-options input[type="radio"]').change(function() {
+            var selectedSort = $(this).val();
+            fetchLatestAlerts(selectedSort);
+        });
+        setInterval(function() {
+            var selectedSort = $('.alert-sort-options input[type="radio"]:checked').val();
+            fetchLatestAlerts(selectedSort);
+        }, 10000);
+
+        $(document).on('submit', '.mark-read-form', function(event) {
+            event.preventDefault();
+            var form = $(this);
+            var alertId = form.data('alert-id');
+            $.ajax({
+                type: 'POST',
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#alert-' + alertId).removeClass('unread');
+                        form.find('button').text('Read').attr('disabled', true);
+                    }
+                },
+                error: function() {
+                    alert('There was an error marking this alert as read.');
+                }
+            });
+        });
+    });
+</script>

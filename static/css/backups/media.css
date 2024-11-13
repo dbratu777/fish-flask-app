@@ -1,0 +1,28 @@
+.media-container {
+    text-align: left;
+}
+
+#media-video-player, #media-image-container {
+    width: 100%;
+    max-width: 1280px;
+    height: auto;
+    display: none;
+}
+
+#media-video-player.active, #media-image-container.active {
+    display: block; 
+}
+
+.media-controls label {
+    display: block;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+}
+
+.media-controls input[type="radio"] {
+    margin-right: 10px;
+    /* vertical-align: middle; */
+}

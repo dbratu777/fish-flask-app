@@ -1,0 +1,65 @@
+
+<div class="media-container">
+    <video id="media-video-player" class="media active" controls>
+        <source id="media-video-source" src="{{ url_for('static', filename='videos/video1.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div id="media-image-container" class="media">
+        <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Image" width="100%">
+    </div>
+
+    <!-- Radio buttons to switch media -->
+    <div class="media-controls">
+        <label>
+            <input type="radio" name="media-toggle" value="video1" class="media-radio" checked> Standard Livestream
+        </label>
+        <label>
+            <input type="radio" name="media-toggle" value="video2" class="media-radio"> Processed Livestream
+        </label>
+        <label>
+            <input type="radio" name="media-toggle" value="image" class="media-radio"> Movement Heatmap
+        </label>
+    </div>
+</div>
+
+
+<script>
+    var video1Url = "{{ url_for('static', filename='videos/video1.mp4') }}";
+    var video2Url = "{{ url_for('static', filename='videos/video2.mp4') }}";
+
+    let videoPlayer = document.getElementById("media-video-player");
+    let imageContainer = document.getElementById("media-image-container");
+    let videoSource = document.getElementById("media-video-source");
+
+    let mediaRadioButtons = document.querySelectorAll('.media-radio');
+
+    function changeMedia() {
+        let selectedMedia = document.querySelector('input[name="media-toggle"]:checked').value;
+
+        if (selectedMedia === 'video1') {
+            videoSource.src = video1Url;
+            videoPlayer.load();
+            videoPlayer.play();
+            imageContainer.classList.remove("active");
+            videoPlayer.classList.add("active");
+
+        } else if (selectedMedia === 'video2') {
+            videoSource.src = video2Url;
+            videoPlayer.load();
+            videoPlayer.play();
+            imageContainer.classList.remove("active");
+            videoPlayer.classList.add("active");
+
+        } else if (selectedMedia === 'image') {
+            videoPlayer.classList.remove("active");
+            imageContainer.classList.add("active");
+        }
+    }
+
+    mediaRadioButtons.forEach(function(radio) {
+        radio.addEventListener('change', changeMedia);
+    });
+
+    changeMedia();
+</script>

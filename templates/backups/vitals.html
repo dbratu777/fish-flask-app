@@ -1,0 +1,98 @@
+<form id="update-set-values-form" action="/set_vitals" method="POST">
+    <div class="vitals-container">
+        <div class="vitals-block">
+            <h3>Temperature Settings:</h3>
+            {% if latest_temp %}
+                <p id="temp-reported">Reported: {{ latest_temp.reported_value if latest_temp.reported_value else 'N/A' }} &deg;F</p>
+                <p id="temp-set">Set: {{ latest_temp.set_value if latest_temp.set_value else 'N/A' }} &deg;F</p>
+                <div class="vitals-input-group">
+                    <label for="temp-set-value">Update Set: (65.0 &deg;F - 85.0 &deg;F)</label>
+                    <input type="number" id="temp-set-value" name="temp-set-value"
+                        value="{{ latest_temp.set_value if latest_temp.set_value else '' }}"
+                        min="65.0" max="85.0" step="0.5" required>
+                </div>
+            {% else %}
+                <p>No Temperature Data Available.</p>
+            {% endif %}
+        </div>
+
+        <div class="vitals-block">
+            <h3>pH Settings:</h3>
+            {% if latest_ph %}
+                <p id="ph-reported">Reported: {{ latest_ph.reported_value if latest_ph.reported_value else 'N/A' }} pH</p>
+                <p id="ph-set">Set: {{ latest_ph.set_value if latest_ph.set_value else 'N/A' }} pH</p>
+                <div class="vitals-input-group">
+                    <label for="ph-set-value">Update Set: (6.5 pH - 8.5 pH)</label>
+                    <input type="number" id="ph-set-value" name="ph-set-value"
+                        value="{{ latest_ph.set_value if latest_ph.set_value else '' }}"
+                        min="6.5" max="8.5" step="0.5" required>
+                </div>
+            {% else %}
+                <p>No pH Data Available.</p>
+            {% endif %}
+        </div>
+
+        <div class="vitals-block">
+            <h3>Dissolved Oxygen Settings:</h3>
+            {% if latest_do %}
+                <p id="do-reported">Reported: {{ latest_do.reported_value if latest_do.reported_value else 'N/A' }} ppm</p>
+                <p id="do-set">Set: {{ latest_do.set_value if latest_do.set_value else 'N/A' }} ppm</p>
+                <div class="vitals-input-group">
+                    <label for="do-set-value">Update Set: (6.5 ppm - 8.5 ppm)</label>
+                    <input type="number" id="do-set-value" name="do-set-value"
+                        value="{{ latest_do.set_value if latest_do.set_value else '' }}"
+                        min="6.5" max="8.5" step="0.5" required>
+                </div>
+            {% else %}
+                <p>No Dissolved Oxygen Data Available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <button type="submit" class="vitals-btn">Confirm Changes</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        function fetchLatestData() {
+            $.ajax({
+                type: 'GET',
+                url: '/get_vitals',
+                success: function(response) {
+                    document.getElementById('temp-reported').textContent = 'Reported: ' + (response.latest_temp.reported_value || 'N/A') + ' °F';
+                    document.getElementById('ph-reported').textContent = 'Reported: ' + (response.latest_ph.reported_value || 'N/A') + ' pH';
+                    document.getElementById('do-reported').textContent = 'Reported: ' + (response.latest_do.reported_value || 'N/A') + ' ppm';
+                },
+                error: function() {
+                    console.error('Error fetching latest data.');
+                }
+            });
+        }
+        fetchLatestData();
+        setInterval(fetchLatestData, 10000);
+
+        $('#update-set-values-form').on('submit', function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/set_vitals',
+                data: $(this).serialize(),
+                cache: false,
+                success: function(response) {
+                    $('#temp-set').text('Set: ' + response.latest_temp.set_value + ' °F');
+                    $('#ph-set').text('Set: ' + response.latest_ph.set_value + ' pH');
+                    $('#do-set').text('Set: ' + response.latest_do.set_value + ' ppm');
+
+                    $('#temp-set-value').val(response.latest_temp.set_value);
+                    $('#ph-set-value').val(response.latest_ph.set_value);
+                    $('#do-set-value').val(response.latest_do.set_value);
+                    
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>

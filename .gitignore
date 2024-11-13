@@ -1,0 +1,13 @@
+
+# ignore pycaches
+*/__pycache__/*
+
+# ignore database file
+instance/*.db
+
+# ignore video files
+static/videos/*.mp4
+
+# ignore image files
+static/images/*.jpg
+static/images/*.png

@@ -1,0 +1,309 @@
+/* Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Containers */
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100%;
+}
+
+.main-container {
+    flex: 3;
+    padding: 1.25rem; /* 20px = 1.25rem */
+    overflow: auto;
+}
+
+.side-container {
+    flex: 1;
+    padding: 1.25rem; /* 20px = 1.25rem */
+    background-color: #fff;
+    border-left: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+/* Header */
+.header-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.625rem 1.25rem; /* 10px = 0.625rem, 20px = 1.25rem */
+    background-color: #256b9d;
+    color: white;
+}
+
+.header-device-info p {
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1.25rem; /* 20px = 1.25rem */
+}
+
+/* Dropdown and Buttons */
+.header-dd {
+    position: relative;
+    display: inline-block;
+}
+
+.header-dd-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 10rem; /* 160px = 10rem */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* 8px = 0.5rem, 16px = 1rem */
+    padding: 0.625rem;
+    border-radius: 0.3125rem; /* 5px = 0.3125rem */
+    z-index: 1;
+    color: #333;
+}
+
+.header-dd-btn, .alias-btn, .filter-btn, .water-btn, .feeder-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn {
+    background-color: #9c2525;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.header-dd-btn:hover, .alias-btn:hover, .filter-btn:hover, .water-btn:hover, .feeder-btn:hover  {
+    background-color: #437ed1;
+}
+
+.logout-btn:hover {
+    background-color: #c3353f;
+}
+
+.header-dd:hover .header-dd-content {
+    display: block;
+}
+
+.header-dd-content label {
+    display: block;
+    padding: 0.25rem 0;
+    cursor: pointer;
+}
+
+.header-dd-content input[type="text"] {
+    width: 100%;
+    padding: 0.25rem;
+    margin-top: 0.3125rem; /* 5px = 0.3125rem */
+    margin-bottom: 0.5rem; /* 8px = 0.5rem */
+}
+
+.header-dd-content .alias-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.header-dd-content .alias-btn:hover {
+    background-color: #437ed1;
+}
+
+/* Media Section */
+.media-container {
+    text-align: left;
+    margin-bottom: 1.25rem; /* 20px = 1.25rem */
+}
+
+#media-video-player, #media-image-container {
+    width: 100%;
+    max-width: 80rem; /* 1280px = 80rem */
+    display: none;
+}
+
+#media-video-player.active, #media-image-container.active {
+    display: block;
+}
+
+.media-controls {
+    margin-top: 0.625rem; /* 10px = 0.625rem */
+}
+
+.media-controls label {
+    display: inline-block;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin: 0.3125rem 0; /* 5px = 0.3125rem */
+    padding: 0.625rem; /* 10px = 0.625rem */
+}
+
+/* Vitals Section */
+.vitals-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem; /* 20px = 1.25rem */
+}
+
+.vitals-block {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 1.25rem; /* 20px = 1.25rem */
+    width: 30%;
+    box-sizing: border-box;
+}
+
+.vitals-input-group input {
+    width: 100%;
+    padding: 0.5rem; /* 8px = 0.5rem */
+    margin-top: 0.3125rem; /* 5px = 0.3125rem */
+}
+
+.vitals-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.vitals-btn:hover {
+    background-color: #437ed1;
+}
+
+/* Alerts Section */
+.alert-sort-options {
+    margin-top: 0.625rem; /* 10px = 0.625rem */
+}
+
+.alert-sort-options label {
+    display: inline-block;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin: 0.3125rem 0; /* 5px = 0.3125rem */
+    padding: 0.625rem; /* 10px = 0.625rem */
+}
+
+.alert-list {
+    list-style: none;
+    padding: 0;
+}
+
+.alert-list li {
+    background-color: white;
+    margin: 0.625rem 0; /* 10px = 0.625rem */
+    padding: 0.625rem; /* 10px = 0.625rem */
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease;
+}
+
+.alert-list li.unread {
+    background-color: #f8d7da;
+}
+
+.alert-list li .alert-title {
+    font-weight: bold;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 0.625rem; /* 10px = 0.625rem */
+}
+
+/* Button Styles */
+.alert-mark-read-btn, .alert-delete-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.alert-mark-read-btn:hover, .alert-delete-btn:hover {
+    background-color: #437ed1;
+}
+
+.alert-delete-btn {
+    background-color: #9c2525;
+}
+
+.alert-delete-btn:hover {
+    background-color: #c3353f;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 48rem) { /* 768px = 48rem */
+    .container {
+        flex-direction: column;
+    }
+
+    .main-container, .side-container {
+        width: 100%;
+    }
+
+    .vitals-block {
+        width: 100%;
+    }
+
+    .header-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        flex-direction: column;
+        gap: 0.625rem; /* 10px = 0.625rem */
+    }
+
+    .header-dd-content {
+        min-width: 100%;
+    }
+
+    .media-controls label {
+        width: 100%;
+    }
+
+    .media-container {
+        margin-bottom: 0.625rem; /* 10px = 0.625rem */
+    }
+}
+
+@media (max-width: 40rem) { /* 640px = 40rem */
+    .header-dd-btn, .alias-btn, .filter-btn, .water-btn, .feeder-btn,
+    .logout-btn, .vitals-btn {
+        padding: 0.5rem; /* 8px = 0.5rem */
+    }
+
+    .vitals-block {
+        width: 100%;
+        padding: 1rem; /* 16px = 1rem */
+    }
+
+    .header-banner {
+        padding: 0.5rem 1rem; /* 8px = 0.5rem, 16px = 1rem */
+    }
+}

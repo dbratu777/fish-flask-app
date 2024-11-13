@@ -1,0 +1,77 @@
+
+.alert-sort-options label {
+    display: block;
+    background-color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+}
+
+.alert-sort-options input[type="radio"] {
+    margin-right: 10px;
+    /* vertical-align: middle; */
+}
+
+.alert-list {
+    list-style: none;
+    padding: 0;
+}
+
+.alert-list li {
+    background-color: white;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease;
+}
+
+.alert-list li.unread {
+    background-color: #f8d7da;
+}
+
+.alert-list li .alert-title {
+    font-weight: bold;
+}
+
+.alert-list li .alert-description {
+    font-size: 0.9rem;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Button to mark as read */
+.alert-mark-read-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.alert-mark-read-btn:hover {
+    background-color: #437ed1;
+}
+
+/* Button to mark as read */
+.alert-delete-btn {
+    background-color: #9c2525;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.alert-delete-btn:hover {
+    background-color: #c3353f;
+}

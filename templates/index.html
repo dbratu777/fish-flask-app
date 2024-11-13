@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="header-banner">
+        <div class="header-device-info">
+            <p>Fish Friend <br> Web Application</p>
+        </div>
+        <div class="header-device-info">
+            <p id="device-id">Device ID: {{ current_device.device_id or 'N/A' }}</p>
+            <p id="device-alias">Device Alias: {{ current_device.alias or 'N/A' }}</p>
+        </div>
+
+        <div class="header-actions">
+            <form id="update-device-alias-form" action="/set_alias" method="POST">
+                <div class="header-dd">
+                    <button class="header-dd-btn">Options</button>
+                    <div class="header-dd-content">
+                        <label>Modify Device Alias:</label>
+                        <input type="text" id="device-alias-value" name="device-alias-value" value="{{ current_device.alias or '' }}" required>
+                        <button class="alias-btn" id="alias-btn" type="submit">Update</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="header-dd">
+                <button class="header-dd-btn">Reminders</button>
+                <div class="header-dd-content">
+                    <p id="filter-ts">Last Filter Change: {{ latest_main.filter_time or 'N/A' }}</p>
+                    <button class="filter-btn" id="filter-btn">Update</button>
+                    <p id="water-ts">Last Water Swap: {{ latest_main.water_time or 'N/A' }}</p>
+                    <button class="water-btn" id="water-btn">Update</button>
+                    <p id="feeder-ts">Last Fed: {{ latest_feed.timestamp or 'N/A' }}</p>
+                    <button class="feeder-btn" id="feeder-btn">Feed</button>
+                </div>
+            </div>
+
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-container">
+            <!-- Media Section -->
+            <div class="media-container">
+                <video id="media-video-player" class="media active" controls>
+                    <source id="media-video-source" src="{{ url_for('static', filename='videos/video1.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div id="media-image-container" class="media">
+                    <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="aquarium movement heatmap" width="100%">
+                </div>
+                <div class="media-controls">
+                    <label><input type="radio" class="media-radio" name="media-toggle" value="video1" checked> Standard Livestream</label>
+                    <label><input type="radio" class="media-radio" name="media-toggle" value="video2"> Processed Livestream</label>
+                    <label><input type="radio" class="media-radio" name="media-toggle" value="image"> Movement Heatmap</label>
+                </div>
+            </div>
+
+            <!-- Vitals Section -->
+            <form id="set-values-form" action="/set_vitals" method="POST">
+                <div class="vitals-container">
+                    <div class="vitals-block">
+                        <h3>Temperature Settings:</h3>
+                        <p id="temp-reported">Reported: {{ latest_temp.reported_value or 'N/A' }} &deg;F</p>
+                        <p id="temp-set">Set: {{ latest_temp.set_value or 'N/A' }} &deg;F</p>
+                        <div class="vitals-input-group">
+                            <label for="temp-set-value">Update Set: (65.0 &deg;F - 85.0 &deg;F)</label>
+                            <input type="number" id="temp-set-value" name="temp-set-value" value="{{ latest_temp.set_value or '' }}" min="65.0" max="85.0" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="vitals-block">
+                        <h3>pH Settings:</h3>
+                        <p id="ph-reported">Reported: {{ latest_ph.reported_value or 'N/A' }} pH</p>
+                        <p id="ph-set">Set: {{ latest_ph.set_value or 'N/A' }} pH</p>
+                        <div class="vitals-input-group">
+                            <label for="ph-set-value">Update Set: (6.5 pH - 8.5 pH)</label>
+                            <input type="number" id="ph-set-value" name="ph-set-value" value="{{ latest_ph.set_value or '' }}" min="6.5" max="8.5" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="vitals-block">
+                        <h3>Dissolved Oxygen Settings:</h3>
+                        <p id="do-reported">Reported: {{ latest_do.reported_value or 'N/A' }} ppm</p>
+                        <p id="do-set">Set: {{ latest_do.set_value or 'N/A' }} ppm</p>
+                        <div class="vitals-input-group">
+                            <label for="do-set-value">Update Set: (6.5 ppm - 8.5 ppm)</label>
+                            <input type="number" id="do-set-value" name="do-set-value" value="{{ latest_do.set_value or '' }}" min="6.5" max="8.5" step="0.1" required>
+                        </div>
+                    </div>
+                </div>
+                <button class="vitals-btn" type="submit">Confirm Changes</button>
+            </form>
+        </div>
+
+        <div class="side-container">
+            <!-- Alerts Section -->
+            <h3>Alerts</h3>
+            <div class="alert-sort-options">
+                <label> <input type="radio" name="alert-sort" value="timestamp" checked> Sort by Timestamp </label>
+                <label> <input type="radio" name="alert-sort" value="type_timestamp"> Sort by Type </label>
+            </div>
+
+            <ul class="alert-list">
+                {% for alert in alerts %}
+                    <li class="{{ 'unread' if not alert.read else '' }}" id="alert-{{ alert.id }}">
+                        <div class="alert-title">{{ alert.title }}</div>
+                        <div class="alert-description">{{ alert.description }}</div>
+                        <div class="alert-actions">
+                            {% if not alert.read %}
+                                <form class="set-read-form" data-alert-id="{{ alert.id }}" method="POST" action="{{ url_for('set_alert_read', alert_id=alert.id) }}">
+                                    <button type="submit" class="alert-mark-read-btn">Mark as Read</button>
+                                </form>
+                            {% endif %}
+                            <button class="alert-delete-btn" data-alert-id="${alert.id}">Delete</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        var video1Url = "{{ url_for('static', filename='videos/video1.mp4') }}";
+        var video2Url = "{{ url_for('static', filename='videos/video2.mp4') }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

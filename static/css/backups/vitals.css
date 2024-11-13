@@ -1,0 +1,42 @@
+.vitals-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;  /* Space between columns */
+}
+
+.vitals-block {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 30%;
+}
+
+.vitals-block h3 {
+    margin-top: 0;
+}
+
+.vitals-input-group {
+    margin-top: 10px;
+}
+
+.vitals-input-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+
+.vitals-btn {
+    background-color: #256b9d;
+    color: white;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px; 
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.vitals-btn:hover {
+    background-color: #437ed1;
+}
