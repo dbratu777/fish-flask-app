@@ -1,5 +1,6 @@
 
 # ignore pycaches
+__pycache__/*
 */__pycache__/*
 
 # ignore database file
