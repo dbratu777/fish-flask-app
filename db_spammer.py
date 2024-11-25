@@ -66,49 +66,58 @@ session = Session()
 
 def generate_random_temperature():
     new_temperature = Temperature.create_with_last_known(session)
-    new_temperature.reported_value = random.uniform(65.0, 85.0)
+    new_temperature.reported_value = round(random.uniform(50.0, 90.0), 1)
     new_temperature.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_temperature
 
 def generate_random_ph():
     new_ph = PH.create_with_last_known(session)
-    new_ph.reported_value = random.uniform(6.5, 8.5)
+    new_ph.reported_value = round(random.uniform(4.0, 10.0), 1)
     new_ph.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_ph
 
 def generate_random_oxygen():
     new_oxygen = DissolvedOxygen.create_with_last_known(session)
-    new_oxygen.reported_value = random.uniform(6.5, 8.5)
+    new_oxygen.reported_value = round(random.uniform(0.0, 10.0), 1)
     new_oxygen.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_oxygen
 
 def generate_random_alert():
     titles = ["Temperature Alert", "pH Alert", "Oxygen Level Alert"]
-    descriptions = [
+    descriptions0 = [
         "The temperature exceeded the set threshold.",
-        "The pH level dropped below the critical value.",
-        "Oxygen levels are dangerously low.",
+        "The pH level exceeded the set threshold.",
+        "Oxygen levels exceeded the set threshold.",
     ]
+    descriptions1 = [
+        "The temperature is below the set threshold.",
+        "The pH level is below the set threshold.",
+        "Oxygen is below the set threshold.",
+    ]
+    desc_type = random.randint(0, 1)
     type = random.randint(0, 2)
     read = False
     timestamp = datetime.datetime.now(datetime.timezone.utc)
     title = titles[type]
-    description = descriptions[type]
+    if (desc_type == 1): 
+        description = descriptions1[type]
+    else:
+        description = descriptions0[type]
     return Alert(type=type, title=title, description=description, timestamp=timestamp, read=read)
 
 def insert_random_data():
     temp_record = generate_random_temperature()
     session.add(temp_record)
 
-    time.sleep(5)
+    # time.sleep(5)
     ph_record = generate_random_ph()
     session.add(ph_record)
 
-    time.sleep(5)
+    # time.sleep(5)
     oxygen_record = generate_random_oxygen()
     session.add(oxygen_record)
 
-    time.sleep(5)
+    # time.sleep(5)
     alert_record = generate_random_alert()
     session.add(alert_record)
 
@@ -118,7 +127,7 @@ try:
     while True:
         insert_random_data()
         print("Inserted random data into the database.")
-        time.sleep(5)
+        time.sleep(3)
 except KeyboardInterrupt:
     print("Data insertion stopped.")
 finally:
