@@ -37,11 +37,14 @@ class DissolvedOxygenSchema(ma.SQLAlchemyAutoSchema):
 VIDEO_FOLDER = 'static/videos/'
 def get_video(prefix):
     video_files = [f for f in os.listdir(VIDEO_FOLDER) if f.startswith(prefix) and f.endswith('.mp4')]
-    
     if not video_files:
         return None
-    #TODO: CHECK BY TIMESTAMP IN FILENAME
-    most_recent_file = max(video_files, key=lambda f: os.path.getmtime(os.path.join(VIDEO_FOLDER, f)))
+
+    sorted_files = sorted(video_files, key=lambda f: os.path.getmtime(os.path.join(VIDEO_FOLDER, f)), reverse=True)
+    if len(sorted_files) < 2:
+        most_recent_file = sorted_files[0]
+    else:
+        most_recent_file = sorted_files[1] 
     return url_for('static', filename=f'videos/{most_recent_file}')
 
 # Initialize the database tables (if they don't already exist)
