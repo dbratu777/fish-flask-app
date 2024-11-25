@@ -7,6 +7,7 @@ from models.components import db, Temperature, PH, DissolvedOxygen, Alert, Feede
 import datetime
 import time
 import json
+import os
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'temp_key'
@@ -33,6 +34,16 @@ class DissolvedOxygenSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = DissolvedOxygen
 
+VIDEO_FOLDER = 'static/videos/'
+def get_video(prefix):
+    video_files = [f for f in os.listdir(VIDEO_FOLDER) if f.startswith(prefix) and f.endswith('.mp4')]
+    
+    if not video_files:
+        return None
+    #TODO: CHECK BY TIMESTAMP IN FILENAME
+    most_recent_file = max(video_files, key=lambda f: os.path.getmtime(os.path.join(VIDEO_FOLDER, f)))
+    return url_for('static', filename=f'videos/{most_recent_file}')
+
 # Initialize the database tables (if they don't already exist)
 @app.before_request
 def create_tables():
@@ -51,6 +62,12 @@ def load_user(device_id):
     return Device.query.get(int(device_id))
 
 # API Routes
+@app.route('/poll_videos')
+def get_latest_video_urls():
+    video1_url = get_video('video1')  # Get the latest video1
+    video2_url = get_video('video2')  # Get the latest video2
+    return jsonify({'video1_url': video1_url, 'video2_url': video2_url})
+
 @app.route('/set_alias', methods=['POST'])
 def update_device_alias():
     new_alias = request.form.get('device-alias-value')
@@ -234,6 +251,8 @@ def logout():
 @login_required
 def index():
     current_device = Device.query.first()
+    # video1_url = get_video('video1')
+    # video2_url = get_video('video2')
     latest_main = Maintenance.query.order_by(Maintenance.id.desc()).first()
     latest_feed = Feeder.query.order_by(Feeder.timestamp.desc()).first()
     latest_temp = Temperature.query.order_by(Temperature.timestamp.desc()).first()
@@ -264,7 +283,8 @@ def index():
     alerts = Alert.query.order_by(Alert.timestamp.desc()).all()
 
     return render_template('index.html',
-                           current_device=current_device, 
+                           current_device=current_device,
+                           # video1_url=video1_url, video2_url=video2_url,
                            latest_main=latest_main, latest_feed=latest_feed, 
                            latest_temp=latest_temp, latest_ph=latest_ph, latest_do=latest_do, 
                            alerts=alerts)
