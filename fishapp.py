@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_marshmallow import Marshmallow
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from models.components import db, Temperature, PH, DissolvedOxygen, Alert, Feeder, Maintenance, Device
 
 import base64
 import cv2
 import datetime
-import eventlet
+import os
+import time
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'temp_key'
@@ -34,20 +35,6 @@ class PHSchema(ma.SQLAlchemyAutoSchema):
 class DissolvedOxygenSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = DissolvedOxygen
-
-def capture_frames(): 
-    cap = cv2.VideoCapture(0)
-    if not cap.IsOpened():
-        return
-    while True:
-        ret, frame = cap.read()
-        if not ret: 
-            break
-        _, buffer = cv2.imencode('.jpg', frame)
-        jpg_as_text = base64.b64encode(buffer).decode('utf-8')
-        socketio.emit('frame', jpg_as_text)
-        eventlet.sleep(0.1)
-    cap.release()
 
 # Initialize the database tables (if they don't already exist)
 @app.before_request
@@ -284,7 +271,36 @@ def index():
                            latest_temp=latest_temp, latest_ph=latest_ph, latest_do=latest_do, 
                            alerts=alerts)
 
-if __name__ == '__main__':
-    #app.run(debug=True)
+def capture_frames():
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        return
+
+    save_directory = "screenshots"
+    os.makedirs(save_directory, exist_ok=True)
+    last_capture_time = time.time()
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        _, buffer = cv2.imencode('.jpg', frame)
+        jpg_as_text = base64.b64encode(buffer).decode('utf-8')
+        socketio.emit('frame', jpg_as_text)
+
+        current_time = time.time()
+        if current_time - last_capture_time >= 1:
+            last_capture_time = current_time
+            timestamp = int(current_time)
+            screenshot_path = os.path.join(save_directory, f"screenshot_{timestamp}.jpg")
+            cv2.imwrite(screenshot_path, frame)
+
+        socketio.sleep(0.1)
+    cap.release()
+
+@socketio.on('connect')
+def test_connect():
     socketio.start_background_task(capture_frames)
-    socketio.run(app, debug=True)
+
+if __name__ == '__main__':
+    socketio.run(app, host='127.0.0.1', port=5000, debug=True)

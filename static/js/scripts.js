@@ -68,10 +68,33 @@ let imageContainer = document.getElementById("media-image-container");
 let mediaRadioButtons = document.querySelectorAll('.media-radio');
 
 const socket = io();
+
+socket.on('connect', () => {
+    setStatus('connected');
+});
+
 socket.on('frame', (jpg_as_text) => {
     const img = document.getElementById('media-video-source');
     img.src = 'data:image/jpeg;base64,' + jpg_as_text;
 });
+
+socket.on('disconnect', () => {
+    setStatus('disconnected');
+});
+
+function setStatus(status) {
+    const statusText = document.getElementById('status-text');
+    statusText.textContent = status;
+    if (status === 'connected') {
+        statusText.classList.remove('status-disconnected');
+        statusText.classList.add('status-connected');
+        statusText.textContent = 'connected';
+    } else {
+        statusText.classList.remove('status-connected');
+        statusText.classList.add('status-disconnected');
+        statusText.textContent = 'disconnected';
+    }
+}
 
 function changeMedia() {
     let selectedMedia = document.querySelector('input[name="media-toggle"]:checked').value;

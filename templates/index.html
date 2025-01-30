@@ -50,13 +50,11 @@
         <div class="main-container">
             <!-- Media Section -->
             <div class="media-container">
-                <!-- <video id="media-video-player" class="media active" controls>
-                    <source id="media-video-source" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> -->
-
                 <div id="media-video-player">
                     <img id="media-video-source" src="" alt="live aquarium feed">
+                    <div id="status">
+                        <span id="status-text" class="status-text status-disconnected">Connecting...</span>
+                    </div>
                 </div>
                 <div id="media-image-container" class="media">
                     <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="aquarium movement heatmap" width="100%">
@@ -129,8 +127,8 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script>
         var videoUrl = "{{ video_url }}";
     </script>

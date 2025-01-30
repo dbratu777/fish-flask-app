@@ -156,8 +156,28 @@ body {
     display: inline-block;
     background-color: white;
     border: 1px solid #ccc;
-    margin: 0.3125rem 0; /* 5px = 0.3125rem */
+    margin: 0.3125rem; /* 5px = 0.3125rem */
     padding: 0.625rem; /* 10px = 0.625rem */
+}
+
+#status {
+    margin: 0.3125rem; /* 5px = 0.3125rem */
+    color: #555;
+    font-size: 1.2rem;
+}
+.status-text {
+    display: inline-block;
+    padding: 0.625rem; /* 10px = 0.625rem */
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.status-connected {
+    background-color: #437ed1;
+    color: white;
+}
+.status-disconnected {
+    background-color: #c3353f;
+    color: white;
 }
 
 /* Vitals Section */

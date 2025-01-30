@@ -12,3 +12,6 @@ static/videos/*.mp4
 # ignore image files
 static/images/*.jpg
 static/images/*.png
+
+# ignore screenshots
+screenshots/*.jpg
