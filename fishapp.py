@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, Response
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_marshmallow import Marshmallow
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_socketio import SocketIO
 from models.components import db, Temperature, PH, DissolvedOxygen, Alert, Feeder, Maintenance, Device
+
+import base64
+import cv2
 import datetime
-import time
-import json
-import os
+import eventlet
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = 'temp_key'
@@ -16,6 +16,7 @@ app.secret_key = 'temp_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///values.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+socketio = SocketIO(app)
 db.init_app(app)
 ma = Marshmallow(app)
 login_manager = LoginManager()
@@ -34,18 +35,19 @@ class DissolvedOxygenSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = DissolvedOxygen
 
-VIDEO_FOLDER = 'static/videos/'
-def get_video(prefix):
-    video_files = [f for f in os.listdir(VIDEO_FOLDER) if f.startswith(prefix) and f.endswith('.mp4')]
-    if not video_files:
-        return None
-
-    sorted_files = sorted(video_files, key=lambda f: os.path.getmtime(os.path.join(VIDEO_FOLDER, f)), reverse=True)
-    if len(sorted_files) < 2:
-        most_recent_file = sorted_files[0]
-    else:
-        most_recent_file = sorted_files[1] 
-    return url_for('static', filename=f'videos/{most_recent_file}')
+def capture_frames(): 
+    cap = cv2.VideoCapture(0)
+    if not cap.IsOpened():
+        return
+    while True:
+        ret, frame = cap.read()
+        if not ret: 
+            break
+        _, buffer = cv2.imencode('.jpg', frame)
+        jpg_as_text = base64.b64encode(buffer).decode('utf-8')
+        socketio.emit('frame', jpg_as_text)
+        eventlet.sleep(0.1)
+    cap.release()
 
 # Initialize the database tables (if they don't already exist)
 @app.before_request
@@ -65,12 +67,6 @@ def load_user(device_id):
     return Device.query.get(int(device_id))
 
 # API Routes
-@app.route('/poll_videos')
-def get_latest_video_urls():
-    video1_url = get_video('video1')  # Get the latest video1
-    video2_url = get_video('video2')  # Get the latest video2
-    return jsonify({'video1_url': video1_url, 'video2_url': video2_url})
-
 @app.route('/set_alias', methods=['POST'])
 def update_device_alias():
     new_alias = request.form.get('device-alias-value')
@@ -184,7 +180,6 @@ def get_vitals():
 
     return jsonify(data)  # Send the data as a JSON response
 
-
 @app.route('/set_alert_read/<int:alert_id>', methods=['POST'])
 def set_alert_read(alert_id):
     alert = Alert.query.get(alert_id)
@@ -254,8 +249,6 @@ def logout():
 @login_required
 def index():
     current_device = Device.query.first()
-    # video1_url = get_video('video1')
-    # video2_url = get_video('video2')
     latest_main = Maintenance.query.order_by(Maintenance.id.desc()).first()
     latest_feed = Feeder.query.order_by(Feeder.timestamp.desc()).first()
     latest_temp = Temperature.query.order_by(Temperature.timestamp.desc()).first()
@@ -287,10 +280,11 @@ def index():
 
     return render_template('index.html',
                            current_device=current_device,
-                           # video1_url=video1_url, video2_url=video2_url,
                            latest_main=latest_main, latest_feed=latest_feed, 
                            latest_temp=latest_temp, latest_ph=latest_ph, latest_do=latest_do, 
                            alerts=alerts)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    socketio.start_background_task(capture_frames)
+    socketio.run(app, debug=True)

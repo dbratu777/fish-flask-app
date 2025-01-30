@@ -65,49 +65,21 @@ $('#feeder-btn').click(function() {
 
 let videoPlayer = document.getElementById("media-video-player");
 let imageContainer = document.getElementById("media-image-container");
-let videoSource = document.getElementById("media-video-source");
-
 let mediaRadioButtons = document.querySelectorAll('.media-radio');
 
-function fetchLatestVideos() {
-    fetch('/poll_videos')
-        .then(response => response.json())
-        .then(data => {
-            video1Url = data.video1_url;
-            video2Url = data.video2_url;
-
-            if (document.querySelector('input[name="media-toggle"]:checked').value === 'video1') {
-                videoSource.src = video1Url;
-                videoPlayer.load();
-                videoPlayer.play();
-            } else if (document.querySelector('input[name="media-toggle"]:checked').value === 'video2') {
-                videoSource.src = video2Url;
-                videoPlayer.load();
-                videoPlayer.play();
-            }
-        })
-        .catch(error => console.error('Error fetching video URLs:', error));
-}
-
-fetchLatestVideos();
-setInterval(fetchLatestVideos, 10000);
+const socket = io();
+socket.on('frame', (jpg_as_text) => {
+    const img = document.getElementById('media-video-source');
+    img.src = 'data:image/jpeg;base64,' + jpg_as_text;
+});
 
 function changeMedia() {
     let selectedMedia = document.querySelector('input[name="media-toggle"]:checked').value;
 
-    if (selectedMedia === 'video1') {
-        videoSource.src = video1Url;
-        videoPlayer.load();
-        videoPlayer.play();
+    if (selectedMedia === 'video') {
         imageContainer.classList.remove("active");
         videoPlayer.classList.add("active");
 
-    } else if (selectedMedia === 'video2') {
-        videoSource.src = video2Url;
-        videoPlayer.load();
-        videoPlayer.play();
-        imageContainer.classList.remove("active");
-        videoPlayer.classList.add("active");
 
     } else if (selectedMedia === 'image') {
         videoPlayer.classList.remove("active");

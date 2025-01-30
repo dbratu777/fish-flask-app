@@ -50,16 +50,19 @@
         <div class="main-container">
             <!-- Media Section -->
             <div class="media-container">
-                <video id="media-video-player" class="media active" controls>
+                <!-- <video id="media-video-player" class="media active" controls>
                     <source id="media-video-source" type="video/mp4">
                     Your browser does not support the video tag.
-                </video>
+                </video> -->
+
+                <div id="media-video-player">
+                    <img id="media-video-source" src="" alt="live aquarium feed">
+                </div>
                 <div id="media-image-container" class="media">
                     <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="aquarium movement heatmap" width="100%">
                 </div>
                 <div class="media-controls">
-                    <label><input type="radio" class="media-radio" name="media-toggle" value="video1" checked> Standard Livestream</label>
-                    <label><input type="radio" class="media-radio" name="media-toggle" value="video2"> Processed Livestream</label>
+                    <label><input type="radio" class="media-radio" name="media-toggle" value="video" checked> Aquarium Livestream</label>
                     <label><input type="radio" class="media-radio" name="media-toggle" value="image"> Movement Heatmap</label>
                 </div>
             </div>
@@ -127,9 +130,9 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
     <script>
-        var video1Url = "{{ video1_url }}";
-        var video2Url = "{{ video2_url }}";
+        var videoUrl = "{{ video_url }}";
     </script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>

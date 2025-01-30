@@ -1,9 +1,10 @@
-import random
-import datetime
-import time
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
+import datetime
+import random
+import time
 
 Base = declarative_base()
 
