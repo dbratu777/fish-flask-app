@@ -8,6 +8,7 @@ import base64
 import cv2
 import datetime
 import os
+import subprocess 
 import time
 
 app = Flask(__name__, static_folder='static')
@@ -294,6 +295,7 @@ def capture_frames():
             timestamp = int(current_time)
             screenshot_path = os.path.join(save_directory, f"screenshot_{timestamp}.jpg")
             cv2.imwrite(screenshot_path, frame)
+            subprocess.run(["python", "../fish-websockets/rp_client.py", f"{screenshot_path}"])
 
         socketio.sleep(0.1)
     cap.release()
