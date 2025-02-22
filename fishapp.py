@@ -109,6 +109,16 @@ def set_feeder():
     formatted_timestamp = new_feeder.timestamp.strftime('%Y-%m-%d %H:%M:%S')
     return jsonify({'timestamp': formatted_timestamp})
 
+@app.route('/get_heatmap', methods=['GET'])
+def get_heatmap():
+    image_directory = os.path.join(app.root_path, 'static', 'images')
+    files = [f for f in os.listdir(image_directory) if f.startswith("heatmap") and f.endswith(".jpg")]
+    if not files:
+        return jsonify({'latest_image': '/static/images/default_heatmap.jpg'})
+    
+    latest_file = max(files, key=lambda f: os.path.getmtime(os.path.join(image_directory, f)))
+    return jsonify({'latest_image': f'/static/images/{latest_file}'})
+
 @app.route('/set_vitals', methods=['POST'])
 def set_vitals():
     # get values from form
@@ -305,4 +315,4 @@ def test_connect():
     socketio.start_background_task(capture_frames)
 
 if __name__ == '__main__':
-    socketio.run(app, host='127.0.0.1', port=5000, debug=True)
+    socketio.run(app, host='192.168.1.77', port=5000)

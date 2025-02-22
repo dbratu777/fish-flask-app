@@ -107,7 +107,23 @@ function changeMedia() {
     } else if (selectedMedia === 'image') {
         videoPlayer.classList.remove("active");
         imageContainer.classList.add("active");
+
+        fetchLatestHeatmap();
     }
+}
+
+function fetchLatestHeatmap() {
+    $.ajax({
+        url: '/get_heatmap',
+        method: 'GET',
+        success: function(data) {
+            const imageElement = document.querySelector('#media-image-container img');
+            imageElement.src = data.latest_image;
+        },
+        error: function() {
+            console.error('Error fetching the latest heatmap.');
+        }
+    });
 }
 
 mediaRadioButtons.forEach(function(radio) {
@@ -133,7 +149,7 @@ $(document).ready(function() {
         });
     }
     fetchLatestData();
-    setInterval(fetchLatestData, 10000);
+    setInterval(fetchLatestData, 1000);
 
     $('#set-values-form').on('submit', function(event) {
         event.preventDefault();
