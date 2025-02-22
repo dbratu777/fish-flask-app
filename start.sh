@@ -9,7 +9,10 @@ else
     exit 1
 fi
 
-conda activate fish-flask-app       || { echo "ERROR: failed to activate conda environment"; exit 1; }
+conda activate fish-flask-app                           || { echo "ERROR: failed to activate conda environment"; exit 1; }
 
 trap 'conda deactivate' EXIT
-python "$_SCRIPT_DIR"/fishapp.py    || { echo "ERROR: failed to run fishapp.py"; exit 1; }
+cd "$_SCRIPT_DIR" || exit 1
+$(conda run -n fish-flask-app which python) fishapp.py  || { echo "ERROR: failed to run fishapp.py"; exit 1; }
+
+read -p "Press ENTER to exit..."
