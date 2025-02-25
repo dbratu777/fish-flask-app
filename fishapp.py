@@ -307,6 +307,11 @@ def capture_frames():
             cv2.imwrite(screenshot_path, frame)
             subprocess.run(["python", "../fish-websockets/rp_client.py", f"{screenshot_path}"])
 
+            try:
+                os.remove(screenshot_path)
+            except Exception as e:
+                print(f"WARN: could not delete {screenshot_path} - {e}")
+
         socketio.sleep(0.1)
     cap.release()
 
