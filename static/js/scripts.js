@@ -49,15 +49,42 @@ $('#water-btn').click(function() {
     });
 });
 $('#feeder-btn').click(function() {
+    var selectedInterval = $('input[name="interval"]:checked').val();
+    var interval = selectedInterval ? selectedInterval : '0';
+
     $.ajax({
         url: '/set_feeder',
         type: 'POST',
-        success: function(response) {
-            $('#feeder-ts').text('Last Fed: ' + response.timestamp);
+        data: {
+            interval: interval
         },
-        error: function(xhr, status, error) {
-            alert("There was an error processing the feed request.");
-        }
+        /* Debug Alerts */
+        // success: function(response) {
+        //     // Feed now action completed
+        //     alert("Feeding done!");
+        // },
+        // error: function(xhr, status, error) {
+        //     alert("There was an error processing the feed request.");
+        // }
+    });
+});
+$('#update-interval-btn').click(function() {
+    var selectedInterval = $('input[name="interval"]:checked').val();
+    var interval = selectedInterval ? selectedInterval : '0';
+
+    $.ajax({
+        url: '/set_feed_interval',
+        type: 'POST',
+        data: {
+            interval: interval
+        },
+        /* Debug Alerts */
+        // success: function(response) {
+        //     alert("Interval updated successfully!");
+        // },
+        // error: function(xhr, status, error) {
+        //     alert("There was an error updating the interval.");
+        // }
     });
 });
 

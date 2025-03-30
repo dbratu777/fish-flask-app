@@ -34,6 +34,8 @@ class Alert(db.Model):
 class Feeder(db.Model):
     __tablename__ = 'feeder'
     id = db.Column(db.Integer, primary_key=True)
+    interval = db.Column(db.Integer, default=0, nullable=False)
+    feed = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime)
 
 class Maintenance(db.Model):

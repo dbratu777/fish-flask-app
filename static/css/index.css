@@ -83,6 +83,18 @@ body {
     transition: background-color 0.3s ease;
 }
 
+.feeder-interval-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.625rem;
+}
+
+.feeder-action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.625rem;
+}
+
 .logout-btn {
     background-color: #9c2525;
     color: white;
@@ -134,13 +146,15 @@ body {
 
 /* Media Section */
 .media-container {
+    width: 100%;
     text-align: left;
     margin-bottom: 1.25rem; /* 20px = 1.25rem */
 }
 
 #media-video-player, #media-image-container {
     width: 100%;
-    max-width: 80rem; /* 1280px = 80rem */
+    /*max-width: 80rem; /* 1280px = 80rem */
+    object-fit: contain;
     display: none;
 }
 
@@ -316,6 +330,15 @@ body {
     .header-dd-btn, .alias-btn, .filter-btn, .water-btn, .feeder-btn,
     .logout-btn, .vitals-btn {
         padding: 0.5rem; /* 8px = 0.5rem */
+    }
+
+    .feeder-interval-options {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .feeder-action-buttons {
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .vitals-block {

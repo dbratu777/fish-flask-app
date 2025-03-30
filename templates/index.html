@@ -35,8 +35,25 @@
                     <button class="filter-btn" id="filter-btn">Update</button>
                     <p id="water-ts">Last Water Swap: {{ latest_main.water_time or 'N/A' }}</p>
                     <button class="water-btn" id="water-btn">Update</button>
-                    <p id="feeder-ts">Last Fed: {{ latest_feed.timestamp or 'N/A' }}</p>
-                    <button class="feeder-btn" id="feeder-btn">Feed</button>
+
+                    <p id="feeder-ts">Feed Settings (hrs): </p>
+                    <!-- Feeder Interval Selection -->
+                    <div class="feeder-interval-options">
+                        <label for="interval-3hr">3</label>
+                        <input type="radio" id="interval-3hr" name="interval" value="3">
+
+                        <label for="interval-6hr">6</label>
+                        <input type="radio" id="interval-6hr" name="interval" value="6">
+
+                        <label for="interval-12hr">12</label>
+                        <input type="radio" id="interval-12hr" name="interval" value="12">
+                    </div>
+
+                    
+                    <div class="feeder-action-buttons">
+                        <button class="feeder-btn" id="feeder-btn">Feed Now</button>
+                        <button class="feeder-btn" id="update-interval-btn">Update Interval</button>
+                    </div>
                 </div>
             </div>
 

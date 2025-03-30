@@ -102,12 +102,24 @@ def set_water():
 
 @app.route('/set_feeder', methods=['POST'])
 def set_feeder():
-    new_feeder = Feeder(timestamp=datetime.datetime.now(datetime.timezone.utc))
+    interval = int(request.form.get('interval', 0))
+    new_feeder = Feeder(
+        interval=interval,
+        feed=True,
+        timestamp=datetime.datetime.now(datetime.timezone.utc)
+    )
     db.session.add(new_feeder)
     db.session.commit()
+    return jsonify({'status': 'success'})
 
-    formatted_timestamp = new_feeder.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-    return jsonify({'timestamp': formatted_timestamp})
+@app.route('/set_feed_interval', methods=['POST'])
+def set_feed_interval():
+    interval = int(request.form.get('interval', 0))
+    latest_feeder = Feeder.query.order_by(Feeder.timestamp.desc()).first()
+    if latest_feeder:
+        latest_feeder.interval = interval
+        db.session.commit()
+    return jsonify({'status': 'Interval updated successfully'})
 
 @app.route('/get_heatmap', methods=['GET'])
 def get_heatmap():
@@ -287,6 +299,9 @@ def capture_frames():
     if not cap.isOpened():
         return
 
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1024)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 576)
+
     save_directory = "screenshots"
     os.makedirs(save_directory, exist_ok=True)
     last_capture_time = time.time()
@@ -320,4 +335,4 @@ def test_connect():
     socketio.start_background_task(capture_frames)
 
 if __name__ == '__main__':
-    socketio.run(app, host='192.168.1.77', port=5000)
+    socketio.run(app, host='192.168.1.77', port=5000, debug=True)
