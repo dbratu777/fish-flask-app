@@ -91,7 +91,7 @@
                         <p id="temp-set">Set: {{ latest_temp.set_value or 'N/A' }} &deg;F</p>
                         <div class="vitals-input-group">
                             <label for="temp-set-value">Update Set: (65.0 &deg;F - 85.0 &deg;F)</label>
-                            <input type="number" id="temp-set-value" name="temp-set-value" value="{{ latest_temp.set_value or '' }}" min="65.0" max="85.0" step="0.1" required>
+                            <input type="number" id="temp-set-value" name="temp-set-value" value="{{ latest_temp.set_value or '' }}" min="65.0" max="85.0" step="0.5" required>
                         </div>
                     </div>
                     <div class="vitals-block">
@@ -104,12 +104,12 @@
                         </div>
                     </div>
                     <div class="vitals-block">
-                        <h3>Dissolved Oxygen Settings:</h3>
-                        <p id="do-reported">Reported: {{ latest_do.reported_value or 'N/A' }} ppm</p>
-                        <p id="do-set">Set: {{ latest_do.set_value or 'N/A' }} ppm</p>
+                        <h3>Oxygen Reduction Potential Settings:</h3>
+                        <p id="do-reported">Reported: {{ latest_do.reported_value or 'N/A' }} mv</p>
+                        <p id="do-set">Set: {{ latest_do.set_value or 'N/A' }} mv</p>
                         <div class="vitals-input-group">
-                            <label for="do-set-value">Update Set: (6.5 ppm - 8.5 ppm)</label>
-                            <input type="number" id="do-set-value" name="do-set-value" value="{{ latest_do.set_value or '' }}" min="6.5" max="8.5" step="0.1" required>
+                            <label for="do-set-value">Update Set: (200 mv - 450 mv)</label>
+                            <input type="number" id="do-set-value" name="do-set-value" value="{{ latest_do.set_value or '' }}" min="200" max="450" step="10" required>
                         </div>
                     </div>
                 </div>
