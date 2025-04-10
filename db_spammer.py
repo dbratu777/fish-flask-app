@@ -8,12 +8,14 @@ import time
 
 Base = declarative_base()
 
+
 class Measurement(Base):
     __abstract__ = True
     id = Column(Integer, primary_key=True)
     reported_value = Column(Float, nullable=True)
     set_value = Column(Float, nullable=True)
-    timestamp = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    timestamp = Column(
+        DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
     @classmethod
     def create_with_last_known(cls, session):
@@ -24,8 +26,9 @@ class Measurement(Base):
         else:
             reported_value = 0.0
             set_value = 0.0
-        
+
         return cls(reported_value=reported_value, set_value=set_value)
+
 
 class Temperature(Measurement):
     __tablename__ = 'temperatures'
@@ -34,12 +37,14 @@ class Temperature(Measurement):
     def create_with_last_known(cls, session):
         return super().create_with_last_known(session)
 
+
 class PH(Measurement):
     __tablename__ = 'ph_levels'
 
     @classmethod
     def create_with_last_known(cls, session):
         return super().create_with_last_known(session)
+
 
 class DissolvedOxygen(Measurement):
     __tablename__ = 'dissolved_oxygen_levels'
@@ -48,22 +53,26 @@ class DissolvedOxygen(Measurement):
     def create_with_last_known(cls, session):
         return super().create_with_last_known(session)
 
+
 class Alert(Base):
     __tablename__ = 'alerts'
     id = Column(Integer, primary_key=True)
     type = Column(Integer, nullable=False)
     title = Column(String(100), nullable=False)
     description = Column(String(200), nullable=True)
-    timestamp = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
+    timestamp = Column(
+        DateTime, default=datetime.datetime.now(datetime.timezone.utc))
     read = Column(Boolean, default=False)
 
+
 # Set up the database engine
-engine = create_engine('sqlite:///instance/values.db', echo=True) 
+engine = create_engine('sqlite:///instance/values.db', echo=True)
 Base.metadata.create_all(engine)
 
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)
 session = Session()
+
 
 def generate_random_temperature():
     new_temperature = Temperature.create_with_last_known(session)
@@ -71,17 +80,20 @@ def generate_random_temperature():
     new_temperature.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_temperature
 
+
 def generate_random_ph():
     new_ph = PH.create_with_last_known(session)
     new_ph.reported_value = round(random.uniform(4.0, 10.0), 1)
     new_ph.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_ph
 
+
 def generate_random_oxygen():
     new_oxygen = DissolvedOxygen.create_with_last_known(session)
     new_oxygen.reported_value = round(random.uniform(0.0, 10.0), 1)
     new_oxygen.timestamp = datetime.datetime.now(datetime.timezone.utc)
     return new_oxygen
+
 
 def generate_random_alert():
     titles = ["Temperature Alert", "pH Alert", "Oxygen Level Alert"]
@@ -100,11 +112,12 @@ def generate_random_alert():
     read = False
     timestamp = datetime.datetime.now(datetime.timezone.utc)
     title = titles[type]
-    if (desc_type == 1): 
+    if (desc_type == 1):
         description = descriptions1[type]
     else:
         description = descriptions0[type]
     return Alert(type=type, title=title, description=description, timestamp=timestamp, read=read)
+
 
 def insert_random_data():
     temp_record = generate_random_temperature()
@@ -123,6 +136,7 @@ def insert_random_data():
     session.add(alert_record)
 
     session.commit()
+
 
 try:
     while True:
