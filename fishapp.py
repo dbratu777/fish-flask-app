@@ -330,8 +330,8 @@ def capture_frames():
     if not cap.isOpened():
         return
 
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1024)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 576)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
     save_directory = "screenshots"
     os.makedirs(save_directory, exist_ok=True)
