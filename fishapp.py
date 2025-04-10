@@ -360,7 +360,7 @@ def capture_frames():
             except Exception as e:
                 print(f"WARN: could not delete {screenshot_path} - {e}")
 
-        socketio.sleep(0.025)
+        socketio.sleep(0.05)
     cap.release()
 
 
