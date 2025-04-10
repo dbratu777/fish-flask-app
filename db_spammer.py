@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 import datetime
 import random
