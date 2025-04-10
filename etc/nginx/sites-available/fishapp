@@ -4,6 +4,6 @@ server {
 
     location / {
         include proxy_params;
-        proxy_pass http://unix:/home/p3/code/fish-flask-app/fishapp.sock;
+        proxy_pass http://unix:/home/dealer/code/fish-flask-app/fishapp.sock;
     }
 }
